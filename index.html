@@ -43,6 +43,15 @@
     .rotate-y-180 {
       transform: rotateY(180deg);
     }
+    /* Shake animation for incorrect choices */
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-4px); }
+      75% { transform: translateX(4px); }
+    }
+    .animate-shake {
+      animation: shake 0.2s ease-in-out 2;
+    }
   </style>
 </head>
 <body class="bg-amber-50/60 min-h-screen min-h-dvh flex flex-col justify-center items-center p-4 md:p-8 select-none">
@@ -75,6 +84,22 @@
         </button>
       </div>
       
+      <!-- Mode Selector Segmented Control -->
+      <div class="mt-4 bg-slate-200/60 backdrop-blur-sm p-1 rounded-2xl grid grid-cols-2 gap-1 text-xs lg:text-sm font-semibold shadow-inner border border-slate-300/50">
+        <button onclick="switchMode('study')" id="btn-mode-study" class="py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 transition-all cursor-pointer">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.967 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.967 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+          </svg>
+          <span>字卡溫習</span>
+        </button>
+        <button onclick="switchMode('quiz')" id="btn-mode-quiz" class="py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 transition-all cursor-pointer">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.03 0 2.007.475 2.646 1.29M7.5 21h6m-12.75-5.25L5.25 15h13.5l1.5 2.25H2.25Z" />
+          </svg>
+          <span>選詞填空</span>
+        </button>
+      </div>
+      
       <div class="mt-4 flex lg:flex-col lg:items-start lg:gap-3.5 justify-between items-center px-1">
         <span id="unit-title-text" class="text-xs font-bold uppercase tracking-wider text-amber-800 bg-amber-100/95 px-3 py-1.5 rounded-lg shadow-sm border border-amber-200/40">
           單元三 言辭論辯
@@ -86,85 +111,148 @@
     <!-- RIGHT COLUMN: Centered Flashcard Arena & Footer Actions -->
     <div class="w-full max-w-md mx-auto flex flex-col justify-center gap-6 lg:py-6">
       
-      <!-- Responsive Card Height: h-80 on mobile, h-96 on desktop to prevent overflow -->
-      <div class="w-full h-80 lg:h-96 perspective cursor-pointer" onclick="toggleFlip()">
-        <div id="flashcard" class="relative w-full h-full duration-500 preserve-3d transition-transform">
-          
-          <!-- Front of Card -->
-          <div class="absolute w-full h-full backface-hidden bg-white rounded-2xl shadow-xl border border-slate-100 flex flex-col justify-between p-6 md:p-8 text-center bg-gradient-to-br from-white to-amber-50/10">
-            <div id="card-id-front" class="text-slate-300 font-mono text-left font-bold tracking-wider text-sm">3.1</div>
-            <div class="flex flex-col items-center justify-center flex-1">
-              <!-- Idiom and Speaker Row -->
-              <div class="flex items-center justify-center mb-3">
-                <h2 id="card-idiom" class="font-black text-slate-800 tracking-wider font-serif-tc leading-snug">
-                  暢所欲言
-                </h2>
-                <button onclick="playPronunciation(event)" class="ml-3 inline-flex items-center justify-center p-2 rounded-full hover:bg-slate-100/80 active:scale-90 transition-all text-amber-600 hover:text-amber-700 cursor-pointer" title="廣東話發音">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6.5 h-6.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.009 9.009 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z" />
-                  </svg>
-                </button>
-              </div>
-              <p id="card-pinyin" class="text-md text-amber-600 font-semibold tracking-wide font-mono">〔 chàng suǒ yù yán 〕</p>
-            </div>
-            <div class="text-xs text-slate-400 font-medium animate-pulse">💡 點擊字卡查看解釋</div>
-          </div>
-
-          <!-- Back of Card -->
-          <div class="absolute w-full h-full backface-hidden bg-slate-800 text-white rounded-2xl shadow-2xl p-6 md:p-8 flex flex-col justify-between rotate-y-180 border border-slate-700/50 bg-gradient-to-br from-slate-800 to-slate-900">
-            <div>
-              <div class="flex justify-between items-center pb-3 border-b border-slate-700 mb-4">
+      <!-- STUDY MODE AREA -->
+      <div id="study-area" class="w-full flex flex-col gap-6">
+        <!-- Responsive Card Height: h-80 on mobile, h-96 on desktop to prevent overflow -->
+        <div class="w-full h-80 lg:h-96 perspective cursor-pointer" onclick="toggleFlip()">
+          <div id="flashcard" class="relative w-full h-full duration-500 preserve-3d transition-transform">
+            
+            <!-- Front of Card -->
+            <div class="absolute w-full h-full backface-hidden bg-white rounded-2xl shadow-xl border border-slate-100 flex flex-col justify-between p-6 md:p-8 text-center bg-gradient-to-br from-white to-amber-50/10">
+              <div id="card-id-front" class="text-slate-300 font-mono text-left font-bold tracking-wider text-sm">3.1</div>
+              <div class="flex flex-col items-center justify-center flex-1">
                 <!-- Idiom and Speaker Row -->
-                <div class="flex items-center gap-2">
-                  <span id="card-idiom-back" class="font-bold text-amber-400 font-serif-tc">暢所欲言</span>
-                  <button onclick="playPronunciation(event)" class="inline-flex items-center justify-center p-1.5 rounded-full hover:bg-slate-700/60 active:scale-90 transition-all text-amber-400 hover:text-amber-300 cursor-pointer" title="廣東話發音">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5">
+                <div class="flex items-center justify-center mb-3">
+                  <h2 id="card-idiom" class="font-black text-slate-800 tracking-wider font-serif-tc leading-snug">
+                    暢所欲言
+                  </h2>
+                  <button onclick="playPronunciation(event)" class="ml-3 inline-flex items-center justify-center p-2 rounded-full hover:bg-slate-100/80 active:scale-90 transition-all text-amber-600 hover:text-amber-700 cursor-pointer" title="廣東話發音">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6.5 h-6.5">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.009 9.009 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z" />
                     </svg>
                   </button>
                 </div>
-                <span id="card-id-back" class="text-xs font-mono text-slate-400 font-bold">3.1</span>
+                <p id="card-pinyin" class="text-md text-amber-600 font-semibold tracking-wide font-mono">〔 chàng suǒ yù yán 〕</p>
+              </div>
+              <div class="text-xs text-slate-400 font-medium animate-pulse">💡 點擊字卡查看解釋</div>
+            </div>
+
+            <!-- Back of Card -->
+            <div class="absolute w-full h-full backface-hidden bg-slate-800 text-white rounded-2xl shadow-2xl p-6 md:p-8 flex flex-col justify-between rotate-y-180 border border-slate-700/50 bg-gradient-to-br from-slate-800 to-slate-900">
+              <div>
+                <div class="flex justify-between items-center pb-3 border-b border-slate-700 mb-4">
+                  <!-- Idiom and Speaker Row -->
+                  <div class="flex items-center gap-2">
+                    <span id="card-idiom-back" class="font-bold text-amber-400 font-serif-tc">暢所欲言</span>
+                    <button onclick="playPronunciation(event)" class="inline-flex items-center justify-center p-1.5 rounded-full hover:bg-slate-700/60 active:scale-90 transition-all text-amber-400 hover:text-amber-300 cursor-pointer" title="廣東話發音">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.009 9.009 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z" />
+                      </svg>
+                    </button>
+                  </div>
+                  <span id="card-id-back" class="text-xs font-mono text-slate-400 font-bold">3.1</span>
+                </div>
+                
+                <div class="space-y-4">
+                  <div>
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-amber-400/80 mb-1.5 flex items-center gap-1">
+                      <span>【 解釋 】</span>
+                    </h4>
+                    <p id="card-explanation" class="text-slate-200 text-sm md:text-base leading-relaxed tracking-wide font-serif-tc">
+                      痛痛快快地把想說的話都說出來。
+                    </p>
+                  </div>
+                  <div>
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-emerald-400/90 mb-1.5 flex items-center gap-1">
+                      <span>【 例句 】</span>
+                    </h4>
+                    <p id="card-example" class="text-slate-300 text-sm md:text-base leading-relaxed tracking-wide italic font-serif-tc">
+                      「在這次座談會上，大家暢所欲言，提出了許多寶貴的意見。」
+                    </p>
+                  </div>
+                </div>
               </div>
               
-              <div class="space-y-4">
-                <div>
-                  <h4 class="text-xs font-bold uppercase tracking-wider text-amber-400/80 mb-1.5 flex items-center gap-1">
-                    <span>【 解釋 】</span>
-                  </h4>
-                  <p id="card-explanation" class="text-slate-200 text-sm md:text-base leading-relaxed tracking-wide font-serif-tc">
-                    痛痛快快地把想說的話都說出來。
-                  </p>
-                </div>
-                <div>
-                  <h4 class="text-xs font-bold uppercase tracking-wider text-emerald-400/90 mb-1.5 flex items-center gap-1">
-                    <span>【 例句 】</span>
-                  </h4>
-                  <p id="card-example" class="text-slate-300 text-sm md:text-base leading-relaxed tracking-wide italic font-serif-tc">
-                    「在這次座談會上，大家暢所欲言，提出了許多寶貴的意見。」
-                  </p>
-                </div>
-              </div>
+              <div class="text-center text-xs text-slate-500 font-medium">💡 點擊字卡返回正面</div>
             </div>
-            
-            <div class="text-center text-xs text-slate-500 font-medium">💡 點擊字卡返回正面</div>
-          </div>
 
+          </div>
         </div>
+
+        <footer class="w-full grid grid-cols-3 gap-3">
+          <button onclick="prevCard(event)" class="px-4 py-3.5 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-bold rounded-xl shadow-sm active:scale-95 transition-all cursor-pointer text-sm">
+            上一個
+          </button>
+          <button onclick="randomCard(event)" class="px-4 py-3.5 bg-amber-100 hover:bg-amber-200/90 text-amber-800 font-bold rounded-xl shadow-sm active:scale-95 transition-all text-sm cursor-pointer">
+            隨機抽卡
+          </button>
+          <button onclick="nextCard(event)" class="px-4 py-3.5 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-xl shadow-sm active:scale-95 transition-all cursor-pointer text-sm">
+            下一個
+          </button>
+        </footer>
       </div>
 
-      <footer class="w-full grid grid-cols-3 gap-3">
-        <button onclick="prevCard(event)" class="px-4 py-3.5 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-bold rounded-xl shadow-sm active:scale-95 transition-all cursor-pointer text-sm">
-          上一個
-        </button>
-        <button onclick="randomCard(event)" class="px-4 py-3.5 bg-amber-100 hover:bg-amber-200/90 text-amber-800 font-bold rounded-xl shadow-sm active:scale-95 transition-all text-sm cursor-pointer">
-          隨機抽卡
-        </button>
-        <button onclick="nextCard(event)" class="px-4 py-3.5 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-xl shadow-sm active:scale-95 transition-all cursor-pointer text-sm">
-          下一個
-        </button>
-      </footer>
+      <!-- QUIZ MODE AREA -->
+      <div id="quiz-area" class="hidden w-full h-80 lg:h-96 bg-white rounded-2xl shadow-xl border border-slate-100 flex flex-col justify-between p-5 md:p-8 bg-gradient-to-br from-white to-amber-50/10 relative overflow-hidden select-none">
+        
+        <!-- QUIZ QUESTION PANEL -->
+        <div id="quiz-question-panel" class="w-full h-full flex flex-col justify-between">
+          <div class="flex justify-between items-center pb-2.5 border-b border-slate-100 mb-2">
+            <span id="quiz-badge" class="text-xs font-bold uppercase tracking-wider text-amber-800 bg-amber-100/90 px-2.5 py-1 rounded-lg">
+              單元三 測驗
+            </span>
+            <span id="quiz-progress" class="text-xs font-bold text-slate-400 font-mono">
+              第 1 / 5 題
+            </span>
+          </div>
 
-    </div>
+          <div class="flex-1 flex flex-col justify-center items-center py-2">
+            <p id="quiz-question" class="text-md sm:text-lg md:text-xl font-bold text-slate-800 leading-relaxed font-serif-tc text-center">
+              <!-- Dynamically injected sentence with blank -->
+            </p>
+          </div>
+
+          <!-- Choices (2x2 Grid) -->
+          <div id="quiz-choices" class="grid grid-cols-2 gap-2.5 my-3">
+            <!-- Dynamically injected choices -->
+          </div>
+
+          <div class="flex justify-between items-center gap-3 pt-2.5 border-t border-slate-100 mt-2">
+            <div id="quiz-feedback" class="text-xs font-semibold text-slate-400 text-left line-clamp-2 leading-snug">
+              💡 請選擇正確的成語填入空格
+            </div>
+            <button id="quiz-action-btn" onclick="nextQuizQuestion()" class="flex-shrink-0 px-4 py-2 bg-slate-800 text-white font-bold rounded-xl shadow-md transition-all text-xs lg:text-sm opacity-50 pointer-events-none">
+              下一題
+            </button>
+          </div>
+        </div>
+
+        <!-- QUIZ RESULTS PANEL -->
+        <div id="quiz-results-panel" class="hidden w-full h-full flex flex-col items-center justify-center text-center p-2 space-y-4">
+          <div class="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center text-3xl shadow-inner animate-bounce">
+            🎉
+          </div>
+          <div>
+            <h3 class="text-xl font-black text-slate-800 font-serif-tc">測驗完成！</h3>
+            <p id="quiz-evaluation" class="text-amber-600 font-bold text-sm mt-1">🏆 完美！你真是個成語大師！</p>
+          </div>
+          <div class="bg-slate-50 border border-slate-100 px-6 py-2.5 rounded-2xl w-full max-w-[200px] shadow-inner">
+            <div id="quiz-score" class="text-2xl font-black text-slate-800 font-mono leading-none">
+              5 / 5
+            </div>
+            <div class="text-[10px] font-semibold text-slate-400 mt-1 uppercase tracking-wider leading-none">答對題數</div>
+          </div>
+          <div class="flex gap-3 w-full max-w-[280px]">
+            <button onclick="restartQuiz()" class="flex-1 py-2.5 bg-amber-100 hover:bg-amber-200/90 text-amber-800 font-bold rounded-xl shadow-sm transition-all active:scale-95 text-xs lg:text-sm cursor-pointer border border-amber-200/30">
+              再試一次
+            </button>
+            <button onclick="switchMode('study')" class="flex-1 py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-xl shadow-sm transition-all active:scale-95 text-xs lg:text-sm cursor-pointer">
+              返回字卡
+            </button>
+          </div>
+        </div>
+
+      </div>
 
   </div>
 
@@ -405,6 +493,13 @@
     let currentIndex = 0;
     let isFlipped = false;
 
+    // Quiz Mode state
+    let currentMode = "study"; // "study" or "quiz"
+    let quizQuestions = [];
+    let quizCurrentIndex = 0;
+    let quizScore = 0;
+    let quizSelectedAnswer = false;
+
     // DOM Elements
     const flashcardEl = document.getElementById('flashcard');
     const progressTextEl = document.getElementById('progress-text');
@@ -424,6 +519,7 @@
     // Initialize Active Unit data on load
     function initApp() {
       changeUnit('3', true);
+      switchMode('study');
     }
 
     // Change unit filter
@@ -463,6 +559,11 @@
         updateCardDOM();
       } else {
         safeNavigate(() => {});
+      }
+
+      // Automatically regenerate and load a quiz for the newly selected unit if in quiz mode
+      if (currentMode === 'quiz') {
+        startQuiz();
       }
     }
 
@@ -546,6 +647,7 @@
       });
     }
 
+    // Prev card navigation
     function prevCard(event) {
       event.stopPropagation();
       safeNavigate(() => {
@@ -553,6 +655,7 @@
       });
     }
 
+    // Random card pick
     function randomCard(event) {
       event.stopPropagation();
       safeNavigate(() => {
@@ -563,6 +666,216 @@
         } while (randomIndex === currentIndex && idiomData.length > 1);
         currentIndex = randomIndex;
       });
+    }
+
+    // Switch between Flashcard and Quiz Modes
+    function switchMode(mode) {
+      currentMode = mode;
+      
+      const btnStudy = document.getElementById('btn-mode-study');
+      const btnQuiz = document.getElementById('btn-mode-quiz');
+      const studyArea = document.getElementById('study-area');
+      const quizArea = document.getElementById('quiz-area');
+
+      if (mode === 'study') {
+        // Toggle buttons active highlights
+        btnStudy.className = "py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 bg-white text-slate-900 shadow-sm font-bold transition-all cursor-pointer scale-102 border border-slate-200/40";
+        btnQuiz.className = "py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100/40 transition-all cursor-pointer";
+        
+        studyArea.classList.remove('hidden');
+        quizArea.classList.add('hidden');
+        
+        progressTextEl.classList.remove('invisible');
+        updateCardDOM();
+      } else {
+        btnStudy.className = "py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100/40 transition-all cursor-pointer";
+        btnQuiz.className = "py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 bg-white text-slate-900 shadow-sm font-bold transition-all cursor-pointer scale-102 border border-slate-200/40";
+        
+        studyArea.classList.add('hidden');
+        quizArea.classList.remove('hidden');
+        
+        progressTextEl.classList.add('invisible');
+        startQuiz();
+      }
+    }
+
+    // Generate dynamic Quiz Questions from active Unit
+    function startQuiz() {
+      let baseIdioms = [];
+      if (currentUnit === 'all') {
+        baseIdioms = [...allIdiomData];
+      } else {
+        baseIdioms = allIdiomData.filter(item => item.unit === currentUnit);
+      }
+      
+      // Shuffle the pool and select a subset of up to 5 questions
+      const shuffledIdioms = [...baseIdioms].sort(() => Math.random() - 0.5);
+      const selectedIdioms = shuffledIdioms.slice(0, Math.min(5, shuffledIdioms.length));
+      
+      quizQuestions = selectedIdioms.map(item => {
+        // Clean brackets or punctuation from example sentences
+        const cleanExample = item.example.replace(/[「」]/g, '').trim();
+        const questionText = cleanExample.replace(item.idiom, " <span class='text-amber-600 underline underline-offset-4 decoration-2 font-bold px-1'>＿＿＿＿</span> ");
+        
+        // Pick 3 distractors
+        const distractors = getQuizDistractors(item.idiom, item.unit);
+        const choices = [item.idiom, ...distractors].sort(() => Math.random() - 0.5);
+        
+        return {
+          idiom: item.idiom,
+          question: questionText,
+          choices: choices,
+          pinyin: item.pinyin,
+          explanation: item.explanation
+        };
+      });
+      
+      quizCurrentIndex = 0;
+      quizScore = 0;
+      
+      // Reset view panels inside quiz area
+      document.getElementById('quiz-question-panel').classList.remove('hidden');
+      document.getElementById('quiz-results-panel').classList.add('hidden');
+      
+      renderQuizQuestion();
+    }
+
+    // Dynamic Distractor Pool Fetcher
+    function getQuizDistractors(correctIdiom, unit) {
+      let pool = [];
+      if (unit === 'all') {
+        pool = allIdiomData.filter(item => item.idiom !== correctIdiom);
+      } else {
+        pool = allIdiomData.filter(item => item.unit === unit && item.idiom !== correctIdiom);
+        if (pool.length < 3) {
+          pool = allIdiomData.filter(item => item.idiom !== correctIdiom);
+        }
+      }
+      return pool.sort(() => Math.random() - 0.5).slice(0, 3).map(item => item.idiom);
+    }
+
+    // Render current active quiz card
+    function renderQuizQuestion() {
+      if (quizQuestions.length === 0) return;
+      
+      quizSelectedAnswer = false;
+      const current = quizQuestions[quizCurrentIndex];
+      
+      // Update badge context based on current unit
+      const nameMap = {
+        '3': "單元三 測驗",
+        '4': "單元四 測驗",
+        '5': "單元五 測驗",
+        'all': "綜合 測驗"
+      };
+      document.getElementById('quiz-badge').textContent = nameMap[currentUnit] || "成語 測驗";
+      document.getElementById('quiz-progress').textContent = `第 ${quizCurrentIndex + 1} / ${quizQuestions.length} 題`;
+      
+      // Inject question sentence
+      document.getElementById('quiz-question').innerHTML = `「${current.question}」`;
+      
+      // Populate 4 choice buttons
+      const choicesContainer = document.getElementById('quiz-choices');
+      choicesContainer.innerHTML = '';
+      
+      current.choices.forEach(choice => {
+        const btn = document.createElement('button');
+        btn.onclick = () => selectQuizAnswer(choice, btn);
+        btn.className = "w-full py-2.5 px-3 bg-slate-50 hover:bg-slate-100 border border-slate-200/80 text-slate-700 rounded-xl font-bold transition-all active:scale-95 text-xs lg:text-sm cursor-pointer text-center shadow-sm duration-150";
+        btn.textContent = choice;
+        choicesContainer.appendChild(btn);
+      });
+      
+      // Format next question button
+      const actionBtn = document.getElementById('quiz-action-btn');
+      actionBtn.className = "flex-shrink-0 px-4 py-2 bg-slate-800 text-white font-bold rounded-xl shadow-md transition-all text-xs lg:text-sm opacity-50 pointer-events-none";
+      
+      if (quizCurrentIndex === quizQuestions.length - 1) {
+        actionBtn.textContent = "查看結果";
+      } else {
+        actionBtn.textContent = "下一題";
+      }
+      
+      // Reset feedback string
+      document.getElementById('quiz-feedback').innerHTML = "💡 請選擇正確的成語填入空格";
+      document.getElementById('quiz-feedback').className = "text-xs font-semibold text-slate-400 text-left line-clamp-2 leading-snug";
+    }
+
+    // Handle Option Selection
+    function selectQuizAnswer(selectedChoice, selectedBtn) {
+      if (quizSelectedAnswer) return;
+      quizSelectedAnswer = true;
+      
+      const current = quizQuestions[quizCurrentIndex];
+      const actionBtn = document.getElementById('quiz-action-btn');
+      
+      // Enable next navigation
+      actionBtn.classList.remove('opacity-50', 'pointer-events-none');
+      actionBtn.classList.add('cursor-pointer', 'hover:bg-slate-900', 'active:scale-95');
+      
+      const choicesContainer = document.getElementById('quiz-choices');
+      const buttons = choicesContainer.getElementsByTagName('button');
+      
+      // Lock-down selection buttons and apply opacity adjustments
+      for (let btn of buttons) {
+        btn.classList.add('pointer-events-none');
+        if (btn !== selectedBtn && btn.textContent !== current.idiom) {
+          btn.classList.add('opacity-40');
+        }
+      }
+      
+      if (selectedChoice === current.idiom) {
+        quizScore++;
+        selectedBtn.className = "w-full py-2.5 px-3 bg-emerald-50 border-2 border-emerald-500 text-emerald-700 rounded-xl font-black transition-all text-xs lg:text-sm text-center shadow-md scale-102";
+        
+        document.getElementById('quiz-feedback').innerHTML = `🎉 答對了！ <strong>${current.idiom}</strong>：${current.explanation}`;
+        document.getElementById('quiz-feedback').className = "text-xs font-medium text-emerald-600 text-left leading-tight font-serif-tc";
+      } else {
+        selectedBtn.className = "w-full py-2.5 px-3 bg-rose-50 border-2 border-rose-500 text-rose-700 rounded-xl font-bold transition-all text-xs lg:text-sm text-center shadow-md animate-shake";
+        
+        // Find and highlight correct answer
+        for (let btn of buttons) {
+          if (btn.textContent === current.idiom) {
+            btn.className = "w-full py-2.5 px-3 bg-emerald-50 border-2 border-emerald-500/80 text-emerald-700 rounded-xl font-bold transition-all text-xs lg:text-sm text-center shadow-sm opacity-100 scale-101";
+          }
+        }
+        
+        document.getElementById('quiz-feedback').innerHTML = `❌ 答錯了！正確答案是「<strong>${current.idiom}</strong>」`;
+        document.getElementById('quiz-feedback').className = "text-xs font-medium text-rose-500 text-left leading-tight font-serif-tc";
+      }
+    }
+
+    // Step next or complete
+    function nextQuizQuestion() {
+      if (!quizSelectedAnswer) return;
+      
+      if (quizCurrentIndex < quizQuestions.length - 1) {
+        quizCurrentIndex++;
+        renderQuizQuestion();
+      } else {
+        // Hide questioning and reveal summary scorecard
+        document.getElementById('quiz-question-panel').classList.add('hidden');
+        document.getElementById('quiz-results-panel').classList.remove('hidden');
+        
+        document.getElementById('quiz-score').textContent = `${quizScore} / ${quizQuestions.length}`;
+        
+        const quizEval = document.getElementById('quiz-evaluation');
+        if (quizScore === quizQuestions.length) {
+          quizEval.textContent = "🏆 完美！你真是個成語大師！";
+          quizEval.className = "text-emerald-600 font-bold text-sm mt-1";
+        } else if (quizScore >= 3) {
+          quizEval.textContent = "👍 太棒了！繼續加油，離完美不遠囉！";
+          quizEval.className = "text-amber-600 font-bold text-sm mt-1";
+        } else {
+          quizEval.textContent = "📚 加油！多溫習幾次字卡就能記起來囉！";
+          quizEval.className = "text-slate-500 font-bold text-sm mt-1";
+        }
+      }
+    }
+
+    // Restart Quiz
+    function restartQuiz() {
+      startQuiz();
     }
 
     // Run initializer on startup
