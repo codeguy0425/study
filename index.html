@@ -305,7 +305,7 @@
         idiom: "三人成虎",
         pinyin: "sān rén chéng hǔ",
         explanation: "比喻流言惑眾，說的人多了，即使是謠言也會被信以為真。",
-        example: "謠言傳播得很快，若不即時澄清，恐怕會造成三人成虎的過果。"
+        example: "謠言傳播得很快，若不即時澄清，恐怕會造成三人成虎的後果。"
       },
       {
         id: "3.6",
@@ -708,9 +708,8 @@
         baseIdioms = allIdiomData.filter(item => item.unit === currentUnit);
       }
       
-      // Shuffle the pool and select a subset of up to 5 questions
-      const shuffledIdioms = [...baseIdioms].sort(() => Math.random() - 0.5);
-      const selectedIdioms = shuffledIdioms.slice(0, Math.min(5, shuffledIdioms.length));
+      // Shuffle and select all idioms in the pool to ensure each idiom gets a question
+      const selectedIdioms = [...baseIdioms].sort(() => Math.random() - 0.5);
       
       quizQuestions = selectedIdioms.map(item => {
         // Clean brackets or punctuation from example sentences
