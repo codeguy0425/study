@@ -1,9 +1,10 @@
-const CACHE_NAME = 'idioms-pwa-v5';
+const CACHE_NAME = 'idioms-pwa-v7';
 const PRE_CACHE = [
   './',
   './index.html',
   './manifest.json',
   './icon.png',
+  './pth/scripts.html',
   'https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4',
   'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Serif+TC:wght@500;700;900&display=swap'
 ];
