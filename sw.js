@@ -1,4 +1,4 @@
-const CACHE_NAME = 'idioms-pwa-v1';
+const CACHE_NAME = 'idioms-pwa-v2';
 const PRE_CACHE = [
   './',
   './index.html',
@@ -28,36 +28,57 @@ self.addEventListener('activate', event => {
   );
 });
 
-// Intercept network requests with a Cache-First, Fallback-to-Network strategy
+// Intercept network requests
 self.addEventListener('fetch', event => {
-  // Only cache GET requests
+  // Only handle GET requests
   if (event.request.method !== 'GET') return;
 
-  event.respondWith(
-    caches.match(event.request).then(cachedResponse => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
+  const url = new URL(event.request.url);
+  const isNavigation = event.request.mode === 'navigate';
+  const isHtml = url.pathname.endsWith('.html') || url.pathname === '/' || url.pathname.endsWith('/');
 
-      return fetch(event.request)
+  if (isNavigation || isHtml) {
+    // Network-First, Fallback-to-Cache Strategy for HTML/navigation requests
+    // This ensures users always get the freshest content when online, while remaining fully offline-capable.
+    event.respondWith(
+      fetch(event.request)
         .then(networkResponse => {
-          // Dynamically cache external resources (like Google Fonts and CDNs) on demand
-          const url = event.request.url;
-          if (
-            url.startsWith('https://fonts.googleapis.com') ||
-            url.startsWith('https://fonts.gstatic.com') ||
-            url.includes('cdn.jsdelivr.net')
-          ) {
-            return caches.open(CACHE_NAME).then(cache => {
-              cache.put(event.request, networkResponse.clone());
-              return networkResponse;
-            });
-          }
-          return networkResponse;
+          return caches.open(CACHE_NAME).then(cache => {
+            cache.put(event.request, networkResponse.clone());
+            return networkResponse;
+          });
         })
         .catch(() => {
-          // Silent catch for offline navigation
-        });
-    })
-  );
+          return caches.match(event.request);
+        })
+    );
+  } else {
+    // Cache-First, Fallback-to-Network Strategy for static assets and CDN resources
+    event.respondWith(
+      caches.match(event.request).then(cachedResponse => {
+        if (cachedResponse) {
+          return cachedResponse;
+        }
+
+        return fetch(event.request)
+          .then(networkResponse => {
+            // Dynamically cache external resources (like Google Fonts and CDNs) on demand
+            if (
+              url.origin === 'https://fonts.googleapis.com' ||
+              url.origin === 'https://fonts.gstatic.com' ||
+              url.pathname.includes('cdn.jsdelivr.net')
+            ) {
+              return caches.open(CACHE_NAME).then(cache => {
+                cache.put(event.request, networkResponse.clone());
+                return networkResponse;
+              });
+            }
+            return networkResponse;
+          })
+          .catch(() => {
+            // Silent catch for offline navigation
+          });
+      })
+    );
+  }
 });
