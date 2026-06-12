@@ -200,6 +200,25 @@ GLOBAL_OVERRIDES = {
     "誨": "huì",
     "雖": "suī",
     "音": "yīn",
+    
+    # Topic 2 missing mappings
+    "伴": "bàn",
+    "備": "bèi",
+    "優": "yōu",
+    "功": "gōng",
+    "唱": "chàng",
+    "愉": "yú",
+    "折": "zhé",
+    "挫": "cuò",
+    "書": "shū",
+    "滴": "dī",
+    "病": "bìng",
+    "聯": "lián",
+    "菜": "cài",
+    "融": "róng",
+    "讀": "dú",
+    "陪": "péi",
+    "飯": "fàn",
 }
 
 # 2. Topic-specific overrides for polyphonic characters
