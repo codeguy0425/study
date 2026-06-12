@@ -159,6 +159,47 @@ GLOBAL_OVERRIDES = {
     "馳": "chí",
     "驕": "jiāo",
     "齊": "qí",
+    
+    # Topic 6 missing mappings
+    "之": "zhī",
+    "事": "shì",
+    "些": "xiē",
+    "亮": "liàng",
+    "份": "fèn",
+    "位": "wèi",
+    "你": "nǐ",
+    "依": "yī",
+    "單": "dān",
+    "回": "huí",
+    "太": "tài",
+    "已": "yǐ",
+    "幸": "xìng",
+    "微": "wēi",
+    "忘": "wàng",
+    "您": "nín",
+    "懂": "dǒng",
+    "或": "huò",
+    "戲": "xì",
+    "敢": "gǎn",
+    "易": "yì",
+    "枯": "kū",
+    "業": "yè",
+    "正": "zhèng",
+    "準": "zhǔn",
+    "燥": "zào",
+    "甚": "shèn",
+    "畏": "wèi",
+    "畢": "bì",
+    "發": "fā",
+    "簡": "jiǎn",
+    "糾": "jiū",
+    "經": "jīng",
+    "至": "zhì",
+    "許": "xǔ",
+    "語": "yǔ",
+    "誨": "huì",
+    "雖": "suī",
+    "音": "yīn",
 }
 
 # 2. Topic-specific overrides for polyphonic characters
@@ -191,7 +232,7 @@ TOPIC_SPECIFIC_OVERRIDES = {
         "地": "dì",     # 地理 (dì lǐ)
     },
     "6": {
-        # Topic 6 overrides can be added here
+        "地": "de",     # 溫柔地, 耐心地 (de)
     }
 }
 
