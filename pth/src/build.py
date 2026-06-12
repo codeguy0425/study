@@ -126,6 +126,39 @@ GLOBAL_OVERRIDES = {
     "鹼": "jiǎn",
     "點": "diǎn",
     "龍": "lóng",
+    
+    # Topic 4 missing mappings
+    "令": "lìng",
+    "勝": "shèng",
+    "協": "xié",
+    "員": "yuán",
+    "堂": "táng",
+    "契": "qì",
+    "強": "qiáng",
+    "待": "dài",
+    "戰": "zhàn",
+    "挑": "tiǎo",
+    "掣": "chè",
+    "接": "jiē",
+    "擬": "nǐ",
+    "期": "qī",
+    "榮": "róng",
+    "汗": "hàn",
+    "法": "fǎ",
+    "短": "duǎn",
+    "舞": "wǔ",
+    "譽": "yù",
+    "身": "shēn",
+    "配": "pèi",
+    "陸": "lù",
+    "集": "jí",
+    "電": "diàn",
+    "靜": "jìng",
+    "項": "xiàng",
+    "風": "fēng",
+    "馳": "chí",
+    "驕": "jiāo",
+    "齊": "qí",
 }
 
 # 2. Topic-specific overrides for polyphonic characters
@@ -169,6 +202,9 @@ WORD_OVERRIDES = {
     "好漢": ["hǎo", "hàn"],
     "首都": ["shǒu", "dū"],
     "重新": ["chóng", "xīn"],
+    "認為": ["rèn", "wéi"],
+    "身為": ["shēn", "wéi"],
+    "為了": ["wèi", "le"],
 }
 
 def extract_baseline_pinyin(scripts_html_path):
