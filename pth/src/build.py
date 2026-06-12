@@ -345,6 +345,28 @@ GLOBAL_OVERRIDES = {
     "欣": "xīn",
     "賞": "shǎng",
     "那": "nà",
+    
+    # Topic 5 missing mappings
+    "助": "zhù",
+    "各": "gè",
+    "問": "wèn",
+    "境": "jìng",
+    "川": "chuān",
+    "布": "bù",
+    "式": "shì",
+    "晰": "xī",
+    "環": "huán",
+    "眼": "yǎn",
+    "置": "zhì",
+    "變": "biàn",
+    "資": "zī",
+    "透": "tòu",
+    "通": "tōng",
+    "連": "lián",
+    "過": "guò",
+    "闊": "kuò",
+    "題": "tí",
+    "保": "bǎo",
 }
 
 # 2. Topic-specific overrides for polyphonic characters
