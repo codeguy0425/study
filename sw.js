@@ -1,4 +1,4 @@
-const CACHE_NAME = 'idioms-pwa-v30';
+const CACHE_NAME = 'idioms-pwa-v32';
 const PRE_CACHE = [
   './',
   './index.html',
