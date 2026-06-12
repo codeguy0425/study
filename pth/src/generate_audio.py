@@ -18,13 +18,6 @@ def generate_audio(topic_num):
     # We clean up any newlines or weird formatting to make it a continuous speech string.
     speech_text = text_content.replace("\n", " ").replace('"', '\\"').replace("——", "，")
     
-    print("-" * 60)
-    print(f"GENERATING AUDIO FOR TOPIC {topic_num}")
-    print("-" * 60)
-    print(f"Text Length:  {len(text_content)} characters")
-    print(f"Output File:  pth/audio/drafts/topic{topic_num}.wav")
-    print("Synthesizing standard Mandarin using Windows Speech API (Microsoft Hanhan)...")
-    
     # PowerShell commands to speak and output to wave file
     ps_script = f"""
     Add-Type -AssemblyName System.Speech;
@@ -39,13 +32,11 @@ def generate_audio(topic_num):
         # Run the powershell script
         result = subprocess.run(["powershell", "-Command", ps_script], capture_output=True, text=True, encoding="utf-8")
         if result.returncode == 0:
-            print("SUCCESS: WAV audio file generated successfully!")
+            print(f"SUCCESS: Synthesized Topic {topic_num} ({len(text_content)} chars) -> pth/audio/drafts/topic{topic_num}.wav")
         else:
-            print(f"ERROR during synthesis: {result.stderr}")
+            print(f"ERROR: Topic {topic_num} synthesis failed: {result.stderr.strip()}")
     except Exception as e:
-        print(f"EXCEPTION: Failed to generate audio. Details: {e}")
-        
-    print("-" * 60)
+        print(f"ERROR: Topic {topic_num} synthesis failed: {e}")
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
