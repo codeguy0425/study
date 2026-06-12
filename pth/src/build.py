@@ -79,6 +79,53 @@ GLOBAL_OVERRIDES = {
     "代": "dài",
     "獨": "dú",
     "野": "yě",
+    
+    # Topic 1 missing mappings
+    "兩": "liǎng",
+    "具": "jù",
+    "初": "chū",
+    "千": "qiān",
+    "午": "wǔ",
+    "原": "yuán",
+    "口": "kǒu",
+    "守": "shǒu",
+    "屈": "qū",
+    "巷": "xiàng",
+    "念": "niàn",
+    "承": "chéng",
+    "揮": "huī",
+    "於": "yú",
+    "昂": "áng",
+    "槳": "jiǎng",
+    "沸": "fèi",
+    "清": "qīng",
+    "爭": "zhēng",
+    "百": "bǎi",
+    "着": "zhe",
+    "種": "zhǒng",
+    "立": "lì",
+    "端": "duān",
+    "粽": "zòng",
+    "紀": "jì",
+    "肉": "ròu",
+    "興": "xīng",
+    "舟": "zhōu",
+    "舸": "gě",
+    "英": "yīng",
+    "莫": "mò",
+    "葉": "yè",
+    "血": "xuè",
+    "街": "jiē",
+    "設": "shè",
+    "詩": "shī",
+    "護": "hù",
+    "載": "zài",
+    "飄": "piāo",
+    "騰": "téng",
+    "鹹": "xián",
+    "鹼": "jiǎn",
+    "點": "diǎn",
+    "龍": "lóng",
 }
 
 # 2. Topic-specific overrides for polyphonic characters
@@ -310,6 +357,15 @@ def main():
         with open(print_html, "w", encoding="utf-8") as f:
             f.write(print_content)
         print(f"SUCCESS: Wrote compiled HTML to {print_html}")
+        
+        # Write back to master templates to permanently prevent template drift
+        with open(scripts_template, "w", encoding="utf-8") as f:
+            f.write(scripts_content)
+        print(f"SUCCESS: Updated master template {scripts_template}")
+        
+        with open(print_template, "w", encoding="utf-8") as f:
+            f.write(print_content)
+        print(f"SUCCESS: Updated master template {print_template}")
         
         # 6. Increment service worker cache version
         if os.path.exists(sw_file):
