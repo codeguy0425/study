@@ -25,6 +25,7 @@ GLOBAL_OVERRIDES = {
     "把": "bǎ",
     "著": "zhe",
     "還": "hái",
+    "好": "hǎo",
     
     # Missing characters from previous mappings
     "享": "xiǎng",
