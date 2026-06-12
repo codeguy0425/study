@@ -50,43 +50,50 @@
 <body class="bg-amber-50/60 min-h-screen min-h-dvh flex flex-col p-4 md:p-8 select-none">
 
   <!-- Container -->
-  <div class="w-full max-w-5xl mx-auto flex flex-col gap-6 my-auto">
+  <div class="w-full max-w-5xl mx-auto flex flex-col gap-4 sm:gap-6 my-auto">
     
     <!-- Top Nav / Back Button -->
-    <header class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-amber-200/50">
-      <div class="flex items-center gap-4">
-        <a href="../index.html" class="inline-flex items-center justify-center p-2.5 rounded-full bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 shadow-sm active:scale-90 transition-all cursor-pointer" title="返回主頁">
+    <header class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 sm:pb-4 border-b border-amber-200/50">
+      <div class="flex items-center gap-3 sm:gap-4">
+        <a href="../index.html" class="inline-flex items-center justify-center p-2 rounded-full bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 shadow-sm active:scale-90 transition-all cursor-pointer" title="返回主頁">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
           </svg>
         </a>
         <div>
-          <h1 class="text-2xl md:text-3xl font-black text-slate-800 tracking-wider font-serif-tc">普通話口試說話題目</h1>
-          <p class="text-xs md:text-sm text-slate-500 mt-1 font-medium">中一級口試指引：一分鐘說話練習與標準示範朗讀</p>
+          <h1 class="text-xl sm:text-2xl md:text-3xl font-black text-slate-800 tracking-wider font-serif-tc">普通話口試說話題目</h1>
+          <p class="text-[10px] sm:text-xs md:text-sm text-slate-500 mt-0.5 font-medium">中一級口試指引：一分鐘說話練習與標準示範朗讀</p>
         </div>
       </div>
       
       <!-- Quick Toggles -->
-      <div class="flex items-center gap-2">
-        <span id="badge-info" class="text-xs font-bold text-amber-800 bg-amber-100/90 px-3 py-1.5 rounded-lg border border-amber-200/40">
+      <div class="flex items-center gap-2 self-start sm:self-auto">
+        <span id="badge-info" class="text-[10px] sm:text-xs font-bold text-amber-800 bg-amber-100/90 px-2.5 py-1.5 rounded-lg border border-amber-200/40">
           評分標準：內容 (10分) + 語氣語速 (10分)
         </span>
       </div>
     </header>
 
+    <!-- Mobile-Only Horizontal Topic Selector Slider (visible on mobile, hidden on lg) -->
+    <div class="block lg:hidden bg-white/80 backdrop-blur-md p-2.5 rounded-2xl border border-slate-100 shadow-sm">
+      <div class="flex flex-row overflow-x-auto gap-2 pb-0.5 custom-scrollbar-horizontal" id="topic-list-mobile">
+        <!-- Dynamically Rendered Mobile Horizontal Tab Pills -->
+      </div>
+    </div>
+
     <!-- Layout Split -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-start">
       
-      <!-- LEFT: Topic Selector Menu (3 cols) -->
-      <aside class="lg:col-span-4 flex flex-col gap-4">
+      <!-- LEFT DESKTOP SIDEBAR: Topic Selector & Rules (visible on lg, nested differently on mobile) -->
+      <aside class="hidden lg:flex lg:col-span-4 flex-col gap-4">
         <div class="bg-white/80 backdrop-blur-md p-4 rounded-2xl border border-slate-100 shadow-sm">
           <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 font-mono">說話題目選擇 (共 6 題)</h2>
-          <div class="grid grid-cols-1 gap-2" id="topic-list">
-            <!-- Dynamically Rendered Topics -->
+          <div class="flex flex-col gap-2" id="topic-list-desktop">
+            <!-- Dynamically Rendered Desktop Topics -->
           </div>
         </div>
         
-        <!-- Score and Rule reminder -->
+        <!-- Score and Rule reminder (desktop) -->
         <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-slate-200 p-5 rounded-2xl shadow-md border border-slate-700/30 flex flex-col justify-between relative overflow-hidden">
           <div class="absolute -right-4 -bottom-4 text-7xl opacity-5">⏱️</div>
           <h3 class="text-sm font-bold text-amber-400 flex items-center gap-1.5 mb-2">
@@ -103,10 +110,10 @@
       </aside>
 
       <!-- RIGHT: Interactive Script Arena (8 cols) -->
-      <main class="lg:col-span-8 flex flex-col gap-6">
+      <main class="lg:col-span-8 flex flex-col gap-4 sm:gap-6">
         
         <!-- Card Arena -->
-        <div class="bg-white rounded-3xl shadow-xl border border-slate-100 p-6 md:p-8 flex flex-col gap-6 bg-gradient-to-br from-white to-amber-50/10 min-h-[480px] relative overflow-hidden">
+        <div class="bg-white rounded-3xl shadow-xl border border-slate-100 p-4 sm:p-6 md:p-8 flex flex-col gap-4 sm:gap-6 bg-gradient-to-br from-white to-amber-50/10 min-h-[400px] sm:min-h-[480px] relative overflow-hidden">
           
           <!-- Topic Title Header -->
           <div class="flex flex-col md:flex-row md:items-center justify-between pb-4 border-b border-slate-100 gap-3">
@@ -384,31 +391,53 @@
       setupAudioPlayerListeners();
     }
 
-    // Render left sidebar menu
+    // Render both mobile and desktop menus
     function renderTopicMenu() {
-      const listContainer = document.getElementById('topic-list');
-      listContainer.innerHTML = '';
+      const listMobile = document.getElementById('topic-list-mobile');
+      const listDesktop = document.getElementById('topic-list-desktop');
       
-      topicsData.forEach((topic, idx) => {
-        const btn = document.createElement('button');
-        btn.onclick = () => selectTopic(idx);
-        btn.className = `w-full text-left py-3 px-4 rounded-xl flex items-center justify-between transition-all duration-200 cursor-pointer shadow-sm ${
-          idx === activeIndex 
-            ? 'bg-amber-100/90 text-amber-950 font-black border border-amber-300/40 scale-102 font-medium' 
-            : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200/50 hover:text-slate-900 font-bold'
-        }`;
-        
-        btn.innerHTML = `
-          <div class="flex items-center gap-3">
-            <span class="font-mono text-xs text-amber-700/80 bg-white/70 px-2 py-0.5 rounded-md border border-amber-200/30 font-bold">${topic.id}</span>
-            <span class="text-xs sm:text-sm line-clamp-1">${topic.title}</span>
-          </div>
-          <svg class="w-4 h-4 flex-shrink-0 text-slate-400" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-          </svg>
-        `;
-        listContainer.appendChild(btn);
-      });
+      if (listMobile) {
+        listMobile.innerHTML = '';
+        topicsData.forEach((topic, idx) => {
+          const btn = document.createElement('button');
+          btn.onclick = () => selectTopic(idx);
+          btn.className = `flex-shrink-0 w-auto text-center py-2 px-3.5 rounded-xl flex items-center gap-2 transition-all duration-200 cursor-pointer shadow-sm text-xs ${
+            idx === activeIndex 
+              ? 'bg-amber-100/90 text-amber-950 font-black border border-amber-300/40 font-medium' 
+              : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200/50 hover:text-slate-900 font-bold'
+          }`;
+          
+          btn.innerHTML = `
+            <span class="font-mono text-[10px] text-amber-700/80 bg-white/70 px-1.5 py-0.5 rounded-md border border-amber-200/30 font-bold">${topic.id}</span>
+            <span class="whitespace-nowrap">${topic.title.replace("介紹", "")}</span>
+          `;
+          listMobile.appendChild(btn);
+        });
+      }
+      
+      if (listDesktop) {
+        listDesktop.innerHTML = '';
+        topicsData.forEach((topic, idx) => {
+          const btn = document.createElement('button');
+          btn.onclick = () => selectTopic(idx);
+          btn.className = `w-full text-left py-3 px-4 rounded-xl flex items-center justify-between transition-all duration-200 cursor-pointer shadow-sm ${
+            idx === activeIndex 
+              ? 'bg-amber-100/90 text-amber-950 font-black border border-amber-300/40 scale-102 font-medium' 
+              : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200/50 hover:text-slate-900 font-bold'
+          }`;
+          
+          btn.innerHTML = `
+            <div class="flex items-center gap-3">
+              <span class="font-mono text-xs text-amber-700/80 bg-white/70 px-2 py-0.5 rounded-md border border-amber-200/30 font-bold">${topic.id}</span>
+              <span class="text-xs sm:text-sm line-clamp-1">${topic.title}</span>
+            </div>
+            <svg class="w-4 h-4 flex-shrink-0 text-slate-400" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+            </svg>
+          `;
+          listDesktop.appendChild(btn);
+        });
+      }
     }
 
     // Select active topic
