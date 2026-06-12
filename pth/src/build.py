@@ -2,6 +2,7 @@ import os
 import sys
 import re
 import shutil
+import json
 
 base_dir = r"C:\Users\andy\Documents\dev\ai\antigravity\chinese_study"
 
@@ -392,18 +393,16 @@ WORD_OVERRIDES = {
     "為了": ["wèi", "le"],
 }
 
-def extract_baseline_pinyin(scripts_html_path):
+def load_baseline_pinyin():
     """
-    Parses scripts.html to build a baseline dictionary mapping characters to pinyin.
+    Loads baseline character-to-pinyin mappings from char_map.json.
     """
-    char_pinyin_map = {}
-    if os.path.exists(scripts_html_path):
-        with open(scripts_html_path, "r", encoding="utf-8") as f:
-            content = f.read()
-        matches = re.findall(r"<ruby>([^<]+)<rt>([^<]+)</rt></ruby>", content)
-        for char, pinyin in matches:
-            char_pinyin_map[char.strip()] = pinyin.strip()
-    return char_pinyin_map
+    json_path = os.path.join(base_dir, "pth", "src", "char_map.json")
+    if os.path.exists(json_path):
+        with open(json_path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    print(f"WARNING: char_map.json not found at {json_path}. Returning empty map.")
+    return {}
 
 def compile_text_to_ruby(text, char_pinyin_map, overrides, topic_num):
     """
@@ -500,8 +499,8 @@ def main():
     print_template = os.path.join(base_dir, "pth", "templates", "print_template.html")
     sw_file = os.path.join(base_dir, "sw.js")
     
-    # Build Character Map from scripts.html (using it as our reference database)
-    char_map = extract_baseline_pinyin(scripts_html)
+    # Load Character Map from char_map.json
+    char_map = load_baseline_pinyin()
     print(f"Loaded {len(char_map)} baseline character-to-pinyin mappings.")
     
     # Determine which topics to build
