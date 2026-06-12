@@ -341,6 +341,9 @@ GLOBAL_OVERRIDES = {
     "道": "dào",
     "間": "jiān",
     "面": "miàn",
+    "欣": "xīn",
+    "賞": "shǎng",
+    "那": "nà",
 }
 
 # 2. Topic-specific overrides for polyphonic characters
