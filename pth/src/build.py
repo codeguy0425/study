@@ -279,6 +279,18 @@ GLOBAL_OVERRIDES = {
     "遠": "yuǎn",
     "邊": "biān",
     "隊": "duì",
+    
+    # Topic 2 rewritten missing mappings
+    "則": "zé",
+    "半": "bàn",
+    "卻": "què",
+    "句": "jù",
+    "奏": "zòu",
+    "後": "hòu",
+    "放": "fàng",
+    "未": "wèi",
+    "段": "duàn",
+    "達": "dá",
 }
 
 # 2. Topic-specific overrides for polyphonic characters
